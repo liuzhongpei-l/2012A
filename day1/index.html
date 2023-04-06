@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{flage?message:message1 }}
+        <!-- <span id="test">{{list}}</span> -->
+        <!-- <input type="text" name="" id="" v-bind:value="message" v-on:input="handleChange"> -->
+        <input type="text" name="" id="" v-model="message">
+        <div v-html="innerData"></div>
+        <span v-show="flage">测试v-show</span>
+        <span v-if="flage">测试v-if</span>
+        <!-- <ul>
+            <li v-for="(item,index) in list" :key="index">
+                <p><span>{{item.name}}</span><span>{{item.age}}</span></p>
+            </li>
+        </ul> -->
+        <!-- <span v-else-if="flage">测试v-else-if</span>
+        <span v-else="flage">测试v-else</span> -->
+        <!-- <button @click="handleClick">cs</button> -->
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+    const list = '555'
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            message1: "Hello Word!",
+            flage: true,
+            innerData: "<h3>lzp666<h3>",
+            list: [
+                {
+                    name: "刘中沛",
+                    age: 18
+                },
+                {
+                    name: "王月娜",
+                    age: 38
+                },
+                {
+                    name: "刘阳",
+                    age: 98
+                },
+            ]
+        },
+        methods: {
+            handleClick() {
+                // this.message = '666'
+                this.flage = !this.flage
+            },
+            handleChange(val) {
+                this.message = val.target.value
+            }
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    })
+</script>
+
+</html>

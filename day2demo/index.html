@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .tag_item {
+        border: 1px solid rgba(122, 98, 4, 0.534);
+        display: inline-block;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .box {
+        position: relative;
+    }
+
+    .wrap {
+        position: absolute;
+        top: 30px;
+        left: 15px;
+        padding: 10px;
+        border: 1px solid black;
+        background: white;
+    }
+
+    .active {
+        background: rgb(179, 194, 10);
+    }
+
+    .del {
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <span v-for="(item,index) in showTagList" :key="item.title" class="tag_item">{{item.title}} <b
+                @click="handleDelTag(item)" class="del">X</b></span>
+        <div class="box">
+            <button @click="handleClickAddTag">添加标签</button>
+            <div class="wrap" v-show="flage">
+                <input type="text">
+                <br>
+                <div v-for="(item,index) in tagList" :key="item.id">
+                    <h4>{{item.title}}</h4>
+                    <span v-for="(ite,ind) in item.children" :key="ite.id" @click="handleClickTag(ite,ind)"
+                        :class="activeId==ite.id?'active tag_item':'tag_item'">{{ite.title}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./static/js/request.js"></script>
+<script>
+    // let arr = []
+    // console.log(arr, 'arr');
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            tagList: [
+                {
+                    id: 1,
+                    title: "前端",
+                    children: [
+                        {
+                            id: 6,
+                            title: "html",
+                        },
+                        {
+                            id: 7,
+                            title: "css",
+                        },
+                        {
+                            id: 8,
+                            title: "js",
+                        },
+                        {
+                            id: 9,
+                            title: "vue",
+                        },
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "后端",
+                    children: [
+                        {
+                            id: 10,
+                            title: "java",
+                        },
+                        {
+                            id: 11,
+                            title: "php",
+                        },
+                        {
+                            id: 12,
+                            title: "token",
+                        },
+                        {
+                            id: 13,
+                            title: "中间件",
+                        },
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "移动端",
+                    children: [
+                        {
+                            id: 14,
+                            title: "前端",
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    title: "数据库",
+                    children: [
+                        {
+                            id: 15,
+                            title: "前端",
+                        }
+                    ]
+                },
+                {
+                    id: 5,
+                    title: "运维",
+                    children: [
+                        {
+                            id: 16,
+                            title: "前端",
+                        }
+                    ]
+                },
+            ],
+            showTagList: [],
+            flage: false,
+            activeId: null
+        },
+        methods: {
+            handleDelTag(item) {
+                let newShowList = [...this.showTagList]
+                let newList = []
+                newShowList.forEach(ite => {
+                    if (ite.id !== item.id) {
+                        newList.push(ite)
+                    }
+                })
+                this.showTagList = newList
+            },
+            handleClickTag(ite, ind) {
+                let newarr = [...this.showTagList]
+                if (newarr.length < 5) {
+                    newarr.push(ite)
+                    this.showTagList = [...new Set(newarr)]
+                    this.activeId = ite.id
+                } else {
+                    alert('最多可以添加5个标签！')
+                }
+            },
+            handleClickAddTag() {
+                this.flage = true
+            }
+        },
+    })
+</script>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <p v-for="(item,index) in list" :key="index">
+            <img :src="item.avatar" alt="">
+            <span>{{item.nickname}}</span>
+            <span>{{item.phone}}</span>
+        </p>
+        <button @click="handleClick">触发</button>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./static/js/request.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            list: []
+        },
+        watch: {
+            // 如果 `question` 发生改变，这个函数就会运行
+            message: function (newmessage, oldmessage) {
+                console.log(newmessage, 'newmessage');
+                if (newmessage == '123') {
+                    this.getList()
+                }
+                console.log(oldmessage, 'oldmessage');
+            },
+        },
+        // beforeCreate() {
+        //     console.log(1);
+        // },
+        // created() {
+        //     console.log(2);
+        //     this.getList()
+        // },
+        // beforeMount() {
+        //     console.log(3);
+        // },
+        // mounted() {
+        //     console.log(4);
+        //     this.message = "666"
+        // },
+        // beforeUpdate() {
+        //     console.log(5);
+        // },
+        // updated() {
+        //     console.log(6);
+        // },
+        // beforeDestroy() {
+        //     console.log(7);
+        // },
+        // destroyed() {
+        //     console.log(8);
+        // },
+        methods: {
+            handleClick() {
+                this.message = "123"
+            },
+            getList() {
+                request.get('/user/list', {
+                    params: {
+                        pageSize: 3,
+                        pageNum: 1,
+                        nickname: ''
+                    }
+                }).then(res => {
+                    if (res.data.code == 200) {
+                        this.list = res.data.data.data
+                    }
+                })
+            }
+        },
+    })
+</script>
+
+</html>

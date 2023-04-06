@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #app p {
+            margin-top: 20px;
+        }
+
+        .wo {
+            width: 400px;
+            height: 300px;
+            /* border: 2px solid #000; */
+            margin-top: 20px;
+        }
+
+        .wo ul {
+            width: 100%;
+            height: 100px;
+            /* float: left; */
+        }
+
+        .wo ul li {
+
+            height: 59.5px;
+            line-height: 50px;
+
+            width: 100%;
+
+        }
+
+        .wo ul li span {
+            width: 70px;
+            height: 59.5px;
+            /* background: olive; */
+            display: inline-block;
+            text-align: center;
+            line-height: 59.5px;
+            /* margin-left: 6px; */
+            border: #000 solid 1px;
+        }
+
+        .wrap {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, .4);
+        }
+
+        .wrap_box {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #000;
+            background: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -250px;
+            margin-top: -250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <p>姓名：<input type="text" v-model="userInfo.name"></p>
+        <p>年龄：<input type="text" v-model="userInfo.age"></p>
+        <p>性别：
+            <select v-model="userInfo.sex">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </p>
+        <p><button @click="handleClickAdd">添加/修改</button></p>
+        <div class="wo">
+            <ul>
+                <li><span>序号</span> <span>姓名</span><span>年龄</span><span>性别</span><span>操作</span></li>
+                <li v-for="(item,index) in list" :key="index">
+                    <span>{{index+1}}</span><span>{{item.name}}</span><span>{{item.age}}</span><span>{{item.sex}}</span><span><button
+                            @click="handleClickDel(index)">删除</button><button
+                            @click="handleClickEdit(item)">修改</button></span>
+                </li>
+                <p v-if="list.length==0">暂无数据</p>
+            </ul>
+        </div>
+
+
+        <div class="wrap" v-if="isShow">
+            <div class="wrap_box">
+                <p>姓名：<input type="text" v-model="modelUserInfo.name"></p>
+                <p>年龄：<input type="text" v-model="modelUserInfo.age"></p>
+                <p>性别：
+                    <select v-model="modelUserInfo.sex">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </p>
+                <p><button @click="handleClickEnsure">确定</button><button @click="handleClickClanl">取消</button></p>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userInfo: {
+                name: "",
+                age: "",
+                sex: ""
+            },
+            modelUserInfo: {
+                name: "",
+                age: "",
+                sex: ""
+            },
+            isShow: false,
+            list: [
+                {
+                    id: 1,
+                    name: "王悦纳",
+                    age: 58,
+                    sex: '女'
+                },
+                {
+                    id: 2,
+                    name: "刘紫欣",
+                    age: 28,
+                    sex: '女'
+                },
+                {
+                    id: 3,
+                    name: "张霄",
+                    age: 18,
+                    sex: '男'
+                },
+            ]
+        },
+        methods: {
+            handleClickEnsure() {
+                let newList = [...this.list]
+                newList.forEach(item => {
+                    if (item.id == this.modelUserInfo.id) {
+                        item.id = this.modelUserInfo.id
+                        item.name = this.modelUserInfo.name
+                        item.age = this.modelUserInfo.age
+                        item.sex = this.modelUserInfo.sex
+                    }
+                })
+                this.list = newList
+                this.handleClickClanl()
+            },
+            handleClickClanl() {
+                this.isShow = false
+                this.modelUserInfo = {
+                    name: "",
+                    age: "",
+                    sex: ""
+                }
+            },
+            handleClickEdit(item) {
+                let newItem = { ...item }
+                this.modelUserInfo = newItem
+                this.isShow = true
+            },
+            handleClickAdd() {
+                // console.log(this.userInfo);
+                this.userInfo.id = new Date().getTime()
+                this.list.push(this.userInfo)
+            },
+            handleClickDel(index) {
+                this.list.splice(index, 1)
+            }
+        },
+    })
+</script>
+
+</html>

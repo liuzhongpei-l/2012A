@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <p><span>用户昵称：</span> <input type="text" name="" id="nickname" onkeypress="handlekeyDown(event)"></p>
+    </div>
+    <div class="wrap">
+
+    </div>
+    <div>
+        <p>
+            <span id="totalShow"></span>
+            <button onclick="handleClickUp()">上一页</button>
+            <select name="pageSizeShow" id="pageSizeShow" onchange="handleChangeSize()">
+                <option value="5">5条/页</option>
+                <option value="10">10条/页</option>
+                <option value="15">15条/页</option>
+            </select>
+            <input type="text" disabled value="1" id="pageNumShow">
+            <button onclick="handleClickDown()">下一页</button>
+        </p>
+    </div>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/myWeb/static/js/$.js"></script>
+<script src="/myWeb/static/js/request.js"></script>
+<script>
+    let pageNum = 1
+    let pageSize = 5
+    let total = 0
+    const getList = async () => {
+        let results = await request.get('/user/list', { params: { pageNum, pageSize, nickname: $('nickname').value } })
+        if (results.data.code == 200) {
+            let iner = ''
+            total = results.data.data.total
+            results.data.data.data.forEach(item => {
+                iner += `<div>
+            <span>${item.id}</span>
+            <span>${item.username}</span>
+            <span>${item.nickname}</span>
+            <span>${item.phone}</span>
+            <span>${item.state ? '正常' : '禁用'}</span>
+            <button onClick="handleClickEdit(${item.id})">编辑</button>
+            <button onClick="handleClickDel(${item.id})">删除</button>
+        </div>`
+            });
+            $('wrap').innerHTML = iner
+            $('totalShow').innerHTML = `共 ${total} 条`
+        }
+    }
+    const handleClickEdit = (id) => {
+        window.location.href = `/myWeb/edit.html?id=${id}`
+    }
+    const handleClickDel = async (id) => {
+        let results = await request.delete('/user/delUser', { params: { id } })
+        getList()
+    }
+    const handleClickUp = () => {
+        if (pageNum > 1) pageNum = pageNum - 1
+        $('pageNumShow').value = pageNum
+        getList()
+    }
+
+    const handleClickDown = () => {
+        let flage = pageNum < Math.ceil(total / pageSize) ? true : false
+        if (flage) pageNum = pageNum + 1
+        $('pageNumShow').value = pageNum
+        getList()
+    }
+    const handleChangeSize = (val) => {
+        pageSize = $('pageSizeShow').value
+        getList()
+    }
+    const searchList = async (params) => {
+        const { nickname } = params
+        let results = await request.get('/user/searchList', { params: { nickname, pageNum, pageSize } })
+        if (results.data.code == 200) {
+            let iner = ''
+            // total = results.data.data.total
+            results.data.data.forEach(item => {
+                iner += `<div>
+            <span>${item.id}</span>
+            <span>${item.username}</span>
+            <span>${item.nickname}</span>
+            <span>${item.phone}</span>
+            <span>${item.state ? '正常' : '禁用'}</span>
+            <button>编辑</button>
+            <button>删除</button>
+        </div>`
+            });
+            $('wrap').innerHTML = iner
+            $('totalShow').innerHTML = `共 ${total} 条`
+        }
+    }
+    const handlekeyDown = (e) => {
+        if (e.keyCode == 13) {
+            // let nicknameSearchVal = $('nickname').value
+            getList()
+        }
+    }
+
+    getList()
+</script>
+
+</html>
