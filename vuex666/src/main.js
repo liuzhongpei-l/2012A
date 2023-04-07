@@ -8,7 +8,9 @@ import 'vant/lib/index.css';
 
 Vue.use(Lazyload);
 Vue.use(Vant);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+console.log(1111);
 
 new Vue({
   router,
